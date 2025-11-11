@@ -29,6 +29,6 @@ Shows:
 ## Setup Instructions
 
 ```bash
-git clone https://github.com/your-username/mlops-image-classifier.git
+git clone https://github.com/ChristianIshimwe7/mlops-image-classifier.git
 cd mlops-image-classifier
 pip install -r requirements.txt
