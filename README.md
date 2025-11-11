@@ -19,7 +19,7 @@ Shows:
 
 ---
 
-## Live URLs (Hypothetical - Replace with real if deployed)
+## Live URLs
 - **API**: `https://api.mlops-demo.com/predict`  
 - **UI**: `https://ui.mlops-demo.com`  
 - **Model Registry**: `s3://mlops-demo-models/resnet_finetuned_latest.pth`
