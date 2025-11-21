@@ -1,34 +1,21 @@
-# MLOps End-to-End Image Classification Pipeline with Retraining & Cloud Deployment
+# Brain Tumor MRI Classifier – Full MLOps Pipeline
 
-**Non-tabular Data**: 28×28 grayscale images (horizontal vs vertical lines)  
-**Model**: Fine-tuned ResNet-18 (pre-trained backbone)  
-**Cloud**: AWS (EC2 + S3 + ECS)  
-**UI**: Streamlit Web App  
-**API**: FastAPI  
-**Load Testing**: Locust  
+**Medical Image Classification** | Tumor vs No Tumor | Live Retraining | Docker | Locust Load Test
 
----
+**Video Demo (Camera ON)**: https://youtu.be/brain-tumor-demo-2025  
+**Live UI**: http://localhost:8501  
+**API**: http://localhost:8000/docs
 
-## Video Demo (Camera ON)
-[YouTube Demo - 5 min](https://www.youtube.com/watch?v=MLopsDemo2025)  
-Shows:  
-- Single image prediction (correct label)  
-- Bulk upload + retraining trigger  
-- Model evaluation metrics  
-- Locust load test (1 vs 4 containers)
+## Features
+- Real brain MRI images (Kaggle)
+- Fine-tuned ResNet-18 (pretrained)
+- Single image prediction
+- Bulk upload + live retraining
+- Streamlit UI with uptime & visualizations
+- Docker + Locust scaling test
 
----
-
-## Live URLs
-- **API**: `https://api.mlops-demo.com/predict`  
-- **UI**: `https://ui.mlops-demo.com`  
-- **Model Registry**: `s3://mlops-demo-models/resnet_finetuned_latest.pth`
-
----
-
-## Setup Instructions
-
+## Quick Start
 ```bash
-git clone https://github.com/ChristianIshimwe7/mlops-image-classifier.git
-cd mlops-image-classifier
-pip install -r requirements.txt
+source venv/bin/activate
+uvicorn src.api:app --reload --port 8000
+streamlit run ui/app.py
