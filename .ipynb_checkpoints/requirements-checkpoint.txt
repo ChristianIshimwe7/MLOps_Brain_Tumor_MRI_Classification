@@ -1,11 +1,14 @@
-torch>=2.3.0
-torchvision>=0.18.0
-fastapi
-uvicorn[standard]
-streamlit
-pillow
-numpy
-matplotlib
-scikit-learn
-seaborn
-locust
+torch==2.6.0+cpu
+torchvision==0.21.0+cpu
+torchaudio==2.6.0+cpu
+--index-url https://download.pytorch.org/whl/cpu
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+streamlit==1.29.0
+pillow==10.0.1
+numpy==1.26.0
+matplotlib==3.8.0
+scikit-learn==1.3.2
+seaborn==0.13.0
+opencv-python==4.8.1.78
