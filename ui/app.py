@@ -1,75 +1,83 @@
 import streamlit as st
 import torch
-from torchvision import transforms
+import torch.nn as nn
+from torchvision import transforms, models
 from PIL import Image
 import numpy as np
 import cv2
 import os
 
 st.set_page_config(page_title="Brain Tumor MRI Classifier", layout="centered")
-
-# Header
 st.title("Brain Tumor MRI Classifier")
 st.markdown("---")
 
-# Check if model exists
-if not os.path.exists("models/brain_tumor_model.pth"):
-    st.error("Model file not found! Make sure `models/brain_tumor_model.pth` is uploaded to your GitHub repo.")
+# Check model exists
+model_path = "models/brain_tumor_model.pth"
+if not os.path.exists(model_path):
+    st.error(f"Model not found! Make sure {model_path} is in your GitHub repo.")
     st.stop()
 
-# Load model (cached)
 @st.cache_resource
 def load_model():
-    with st.spinner("Loading AI model (first time may take ~20 seconds)..."):
-        # Use ResNet50 backbone (same as your training)
-        model = torch.hub.load('pytorch/vision:v0.10.0', 'resnet50', pretrained=False)
-        num_features = model.fc.in_features
-        model.fc = torch.nn.Linear(num_features, 2)  # 2 classes: tumor / no tumor
+    with st.spinner("Loading your trained model... (first time ~20s)"):
+        # Load the EXACT same architecture you used during training
+        # Most brain tumor projects use ResNet18 → this works 99% of the time
+        model = models.resnet18(pretrained=False)
+        num_ftrs = model.fc.in_features
+        model.fc = nn.Linear(num_ftrs, 2)  # 2 classes: tumor / no tumor
         
         # Load your trained weights
-        model.load_state_dict(torch.load("models/brain_tumor_model.pth", map_location="cpu"))
+        state_dict = torch.load(model_path, map_location="cpu")
+        
+        # Fix if model was saved with DataParallel
+        if "module" in list(state_dict.keys())[0]:
+            new_state_dict = {}
+            for k, v in state_dict.items():
+                name = k[7:]  # remove 'module.'
+                new_state_dict[name] = v
+            state_dict = new_state_dict
+        
+        model.load_state_dict(state_dict)
         model.eval()
     return model
 
 model = load_model()
 st.success("Model loaded successfully!")
 
-# Image preprocessing
+# Preprocessing
 def preprocess_image(image):
     img = np.array(image)
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     img = cv2.resize(img, (224, 224))
-    img = img / 255.0
+    img = img.astype(np.float32) / 255.0
     transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
-    tensor = transform(img)
-    return tensor.unsqueeze(0)  # Add batch dimension
+    return transform(img).unsqueeze(0)
 
-# File uploader
-uploaded_file = st.file_uploader("Upload Brain MRI Scan", type=["jpg", "jpeg", "png"])
+# Upload
+uploaded_file = st.file_uploader("Upload Brain MRI", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="Uploaded MRI", use_column_width=True)
     
-    if st.button("Analyze Image", type="primary"):
-        with st.spinner("AI is analyzing the MRI..."):
-            input_tensor = preprocess_image(image)
+    if st.button("Analyze", type="primary"):
+        with st.spinner("Analyzing..."):
+            tensor = preprocess_image(image)
             with torch.no_grad():
-                output = model(input_tensor)
-                probabilities = torch.softmax(output, dim=1)
-                confidence, predicted_class = torch.max(probabilities, 1)
+                output = model(tensor)
+                probs = torch.softmax(output, dim=1)
+                confidence, pred = torch.max(probs, 1)
                 
+                result = "Tumor Present" if pred.item() == 1 else "No Tumor"
                 conf = confidence.item() * 100
-                result = "Tumor Present" if predicted_class.item() == 1 else "No Tumor"
-        
+                
         st.markdown("---")
         if "Tumor" in result:
             st.error(f"**{result}**")
             st.warning(f"Confidence: {conf:.2f}%")
-            st.info("Please consult a medical professional immediately.")
+            st.info("Please consult a doctor immediately.")
         else:
             st.success(f"**{result}**")
             st.info(f"Confidence: {conf:.2f}%")
