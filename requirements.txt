@@ -1,7 +1,6 @@
-# requirements.txt — FINAL FOR STREAMLIT CLOUD + PYTHON 3.13
 streamlit
 torch==2.5.0+cpu
-torchvision==0.20.0+cpu
+torchvision==0.21.0+cpu
 --extra-index-url https://download.pytorch.org/whl/cpu
 pillow
 requests
