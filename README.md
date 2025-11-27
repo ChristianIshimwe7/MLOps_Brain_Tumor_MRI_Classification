@@ -2,8 +2,10 @@
 
 **Medical Image Classification** | Tumor vs No Tumor | Live Retraining | Docker | Locust Load Test
 
-**Video Demo (Camera ON)**: https://youtu.be/brain-tumor-demo-2025  
-**Live UI**: http://localhost:8501  
+**FULL APP LINK**: https://christianishimwe7-mlops-brain-tumor-mri-classifica-uiapp-upmfgf.streamlit.app/
+**Video Demo**: https://youtu.be/5qRDArGu-JQ
+**SLIDES PRESENTATION**: https://docs.google.com/presentation/d/1F8HkD0QtbbKIi-M_bVtgL9tAN545Awa9/edit?usp=sharing&ouid=111599858326362392445&rtpof=true&sd=true
+**Live UI**: http://localhost:8501 
 **API**: http://localhost:8000/docs
 
 ## Features
