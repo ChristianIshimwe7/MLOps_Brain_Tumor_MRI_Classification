@@ -26,7 +26,7 @@ def load_model():
 
 # Load model
 model = load_model()
-st.success("Model loaded — 100% working!")
+st.success("Welcome to your VIRTUAL NEUROIMAGE HOSPITAL ANALYSER!")
 
 # Preprocess function (your original — perfect)
 def preprocess(img):
@@ -53,7 +53,7 @@ if uploaded:
                 prob = torch.softmax(output, dim=1)[0]
                 confidence = torch.max(prob).item() * 100
                 pred = prob.argmax().item()
-                result = "Tumor Present" if pred == 1 else "No Tumor"
+                result = "No Tumor" if pred == 1 else "Tumor Present"
        
         st.markdown("---")
         if result == "Tumor Present":
@@ -63,4 +63,4 @@ if uploaded:
             st.success(f"**{result}**")
             st.info(f"Confidence: {confidence:.1f}%")
 
-st.caption("By Christian Ishimwe – 100% Working Demo")
+st.caption("By Christian Ishimwe, ML Developer, contact: c.ishimwe7@alustudent.com")
